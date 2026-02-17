@@ -447,6 +447,157 @@
                 </div>
             </div>
 
+            <!-- ========== Manage In One Space - Widget Block ========== -->
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center my-20 lg:my-28">
+                <!-- Left: Text Content -->
+                <div data-aos="fade-right">
+                    <span class="text-cap-accent font-bold text-xl uppercase tracking-wide">მართე</span>
+                    <h3 class="text-3xl sm:text-4xl font-extrabold mt-3 mb-8 leading-tight">ერთ სივრცეში</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start space-x-3">
+                            <span class="mt-2 w-2 h-2 rounded-full bg-cap-accent flex-shrink-0"></span>
+                            <span class="text-gray-300 text-lg">ფილიალები</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <span class="mt-2 w-2 h-2 rounded-full bg-cap-accent flex-shrink-0"></span>
+                            <span class="text-gray-300 text-lg">გაყიდვები და შესყიდვები</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <span class="mt-2 w-2 h-2 rounded-full bg-cap-accent flex-shrink-0"></span>
+                            <span class="text-gray-300 text-lg">მარაგები</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <span class="mt-2 w-2 h-2 rounded-full bg-cap-accent flex-shrink-0"></span>
+                            <span class="text-gray-300 text-lg">მომწოდებლებთან ანგარიშსწორება</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <span class="mt-2 w-2 h-2 rounded-full bg-cap-accent flex-shrink-0"></span>
+                            <span class="text-gray-300 text-lg">ურიდიულ პირზე გაყიდვები</span>
+                        </li>
+                        <li class="flex items-start space-x-3">
+                            <span class="mt-2 w-2 h-2 rounded-full bg-cap-accent flex-shrink-0"></span>
+                            <span class="text-gray-300 text-lg">წარმოება</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Right: Dashboard Widget -->
+                <div data-aos="fade-left">
+                    <div class="relative">
+                        <!-- Main Dashboard Card -->
+                        <div class="bg-white rounded-2xl shadow-2xl shadow-black/20 p-5 sm:p-6 overflow-hidden">
+                            <!-- Top nav dots -->
+                            <div class="flex items-center space-x-2 mb-5">
+                                <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                                <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                                <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                                <div class="flex-1"></div>
+                                <span class="text-xs text-gray-400 font-medium">CAP.AI Dashboard</span>
+                            </div>
+
+                            <!-- Stats Row -->
+                            <div class="grid grid-cols-3 gap-3 mb-5">
+                                <div class="bg-gray-50 rounded-xl p-3 text-center">
+                                    <div class="text-xs text-gray-400 mb-1">შემოსავალი</div>
+                                    <div class="text-lg font-bold text-gray-800">₾ 44,700</div>
+                                    <div class="text-[10px] text-green-500 font-medium mt-0.5"><i class="fas fa-arrow-up text-[8px]"></i> 8.2%</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-xl p-3 text-center">
+                                    <div class="text-xs text-gray-400 mb-1">ხარჯები</div>
+                                    <div class="text-lg font-bold text-gray-800">₾ 4,553</div>
+                                    <div class="text-[10px] text-red-500 font-medium mt-0.5"><i class="fas fa-arrow-down text-[8px]"></i> 3.1%</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-xl p-3 text-center">
+                                    <div class="text-xs text-gray-400 mb-1">მოგება</div>
+                                    <div class="text-lg font-bold text-gray-800">₾ 1,290</div>
+                                    <div class="text-[10px] text-green-500 font-medium mt-0.5"><i class="fas fa-arrow-up text-[8px]"></i> 12.4%</div>
+                                </div>
+                            </div>
+
+                            <!-- Charts Area -->
+                            <div class="grid grid-cols-2 gap-4 mb-5">
+                                <!-- Bar Chart -->
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <div class="text-xs text-gray-500 font-medium mb-3">გაყიდვები</div>
+                                    <div class="flex items-end space-x-1.5 h-20">
+                                        <div class="flex-1 rounded-t bg-blue-200" style="height:45%"></div>
+                                        <div class="flex-1 rounded-t bg-blue-300" style="height:60%"></div>
+                                        <div class="flex-1 rounded-t bg-blue-400" style="height:40%"></div>
+                                        <div class="flex-1 rounded-t bg-blue-500" style="height:75%"></div>
+                                        <div class="flex-1 rounded-t bg-blue-400" style="height:55%"></div>
+                                        <div class="flex-1 rounded-t bg-blue-500" style="height:90%"></div>
+                                        <div class="flex-1 rounded-t bg-blue-600" style="height:100%"></div>
+                                    </div>
+                                </div>
+                                <!-- Donut Chart -->
+                                <div class="bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center">
+                                    <div class="text-xs text-gray-500 font-medium mb-3 self-start">კატეგორიები</div>
+                                    <div class="relative w-20 h-20">
+                                        <svg viewBox="0 0 36 36" class="w-full h-full -rotate-90">
+                                            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#E5E7EB" stroke-width="3"/>
+                                            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#3B82F6" stroke-width="3" stroke-dasharray="40 60" stroke-dashoffset="0"/>
+                                            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#8B5CF6" stroke-width="3" stroke-dasharray="25 75" stroke-dashoffset="-40"/>
+                                            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#F59E0B" stroke-width="3" stroke-dasharray="20 80" stroke-dashoffset="-65"/>
+                                            <circle cx="18" cy="18" r="15.9" fill="none" stroke="#10B981" stroke-width="3" stroke-dasharray="15 85" stroke-dashoffset="-85"/>
+                                        </svg>
+                                        <div class="absolute inset-0 flex items-center justify-center">
+                                            <span class="text-xs font-bold text-gray-600">₾4,553</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bottom Stats Row -->
+                            <div class="grid grid-cols-4 gap-2">
+                                <div class="bg-blue-50 rounded-lg p-2 text-center">
+                                    <div class="text-[10px] text-blue-500 font-medium">ფილიალი</div>
+                                    <div class="text-sm font-bold text-blue-700">12</div>
+                                </div>
+                                <div class="bg-purple-50 rounded-lg p-2 text-center">
+                                    <div class="text-[10px] text-purple-500 font-medium">პროდუქტი</div>
+                                    <div class="text-sm font-bold text-purple-700">847</div>
+                                </div>
+                                <div class="bg-amber-50 rounded-lg p-2 text-center">
+                                    <div class="text-[10px] text-amber-500 font-medium">მომწოდებელი</div>
+                                    <div class="text-sm font-bold text-amber-700">34</div>
+                                </div>
+                                <div class="bg-green-50 rounded-lg p-2 text-center">
+                                    <div class="text-[10px] text-green-500 font-medium">ინვოისი</div>
+                                    <div class="text-sm font-bold text-green-700">156</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Floating mobile card -->
+                        <div class="absolute -bottom-6 -left-4 sm:-left-8 w-36 bg-white rounded-xl shadow-xl shadow-black/10 p-3 animate-float z-10">
+                            <div class="text-[10px] text-gray-400 mb-1.5">დღის გაყიდვა</div>
+                            <div class="text-base font-bold text-gray-800">₾ 1,883</div>
+                            <div class="mt-2 flex items-end space-x-0.5 h-6">
+                                <div class="flex-1 rounded-sm bg-green-200" style="height:40%"></div>
+                                <div class="flex-1 rounded-sm bg-green-300" style="height:60%"></div>
+                                <div class="flex-1 rounded-sm bg-green-400" style="height:80%"></div>
+                                <div class="flex-1 rounded-sm bg-green-500" style="height:65%"></div>
+                                <div class="flex-1 rounded-sm bg-green-400" style="height:90%"></div>
+                                <div class="flex-1 rounded-sm bg-green-500" style="height:100%"></div>
+                            </div>
+                        </div>
+
+                        <!-- Floating notification -->
+                        <div class="absolute -top-4 -right-4 sm:-right-6 bg-white rounded-xl shadow-xl shadow-black/10 p-3 animate-float-delayed z-10">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-check text-green-500 text-xs"></i>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] text-gray-400">ინვოისი #1847</div>
+                                    <div class="text-xs font-semibold text-gray-700">გადახდილია ✓</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Modules Grid -->
             <div class="text-center mb-12" data-aos="fade-up">
                 <h3 class="text-2xl sm:text-3xl font-bold mb-4">ჩვენი მოდულები</h3>
