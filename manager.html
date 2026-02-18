@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CAP.AI - მენეჯერის პანელი</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'georgian': ['"Noto Sans Georgian"', 'sans-serif'],
+                    },
+                    colors: {
+                        'cap': {
+                            'primary': '#0F172A',
+                            'secondary': '#1E293B',
+                            'accent': '#3B82F6',
+                            'accent-light': '#60A5FA',
+                            'gold': '#F59E0B',
+                            'green': '#10B981',
+                            'dark': '#020617',
+                            'light': '#F8FAFC',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="manager.css">
+</head>
+<body class="font-georgian bg-cap-dark text-white min-h-screen">
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside id="sidebar" class="fixed top-0 left-0 h-full w-72 bg-cap-primary/95 backdrop-blur-xl border-r border-white/5 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300">
+        <!-- Logo -->
+        <div class="flex items-center space-x-3 px-6 h-20 border-b border-white/5">
+            <div class="w-10 h-10 bg-gradient-to-br from-cap-accent to-cap-accent-light rounded-lg flex items-center justify-center">
+                <span class="text-white font-bold text-lg">C</span>
+            </div>
+            <span class="text-xl font-bold">
+                <span class="text-white">CAP</span><span class="text-cap-accent">.</span><span class="text-cap-accent-light">AI</span>
+            </span>
+            <span class="ml-auto text-xs px-2 py-1 bg-cap-accent/10 text-cap-accent-light rounded-full">მენეჯერი</span>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="px-4 py-6 space-y-1 overflow-y-auto h-[calc(100%-5rem)]">
+            <div class="text-xs text-gray-500 uppercase tracking-wider px-3 mb-3">მთავარი</div>
+            
+            <a href="#financial-status" class="sidebar-link active flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                <i class="fas fa-chart-line w-5 text-center"></i>
+                <span>ფინანსური მდგომარეობა</span>
+            </a>
+            <a href="#balance" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                <i class="fas fa-scale-balanced w-5 text-center"></i>
+                <span>ბალანსის სურათი</span>
+            </a>
+            <a href="#cash-pressure" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                <i class="fas fa-hand-holding-dollar w-5 text-center"></i>
+                <span>ვალდებულებების წნეხი</span>
+            </a>
+            <a href="#sales" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                <i class="fas fa-cart-shopping w-5 text-center"></i>
+                <span>გაყიდვები და შესრულება</span>
+            </a>
+            <a href="#kpi" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                <i class="fas fa-calculator w-5 text-center"></i>
+                <span>ძირითადი მაჩვენებლები</span>
+            </a>
+
+            <div class="text-xs text-gray-500 uppercase tracking-wider px-3 mb-3 mt-8">ნავიგაცია</div>
+            <a href="index.html" class="sidebar-link flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all">
+                <i class="fas fa-arrow-left w-5 text-center"></i>
+                <span>მთავარ გვერდზე</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- ========== MOBILE HEADER ========== -->
+    <header class="lg:hidden fixed top-0 left-0 w-full h-16 bg-cap-primary/95 backdrop-blur-xl border-b border-white/5 z-40 flex items-center px-4">
+        <button id="sidebarToggle" class="p-2 rounded-lg hover:bg-white/5 transition-colors">
+            <i class="fas fa-bars text-xl"></i>
+        </button>
+        <span class="ml-4 text-lg font-bold">
+            <span class="text-white">CAP</span><span class="text-cap-accent">.</span><span class="text-cap-accent-light">AI</span>
+        </span>
+    </header>
+
+    <!-- ========== OVERLAY ========== -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="lg:ml-72 pt-20 lg:pt-6 pb-12 px-4 sm:px-6 lg:px-8 max-w-[1600px]">
+
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-bold">მენეჯერის პანელი</h1>
+                    <p class="text-gray-400 text-sm mt-1">ფინანსური მდგომარეობა და ანალიტიკა</p>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <div class="text-right">
+                        <div class="text-sm text-gray-400">ბოლო განახლება</div>
+                        <div class="text-sm font-medium text-cap-accent-light" id="lastUpdate">18 თებ, 2026 — 14:30</div>
+                    </div>
+                    <button onclick="refreshDashboard()" class="p-2.5 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all" title="განახლება">
+                        <i class="fas fa-sync-alt text-cap-accent"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================ -->
+        <!-- 1. FINANCIAL STATUS INDICATOR (TOP BAR) -->
+        <!-- ============================================================ -->
+        <section id="financial-status" class="mb-10">
+            <div class="section-header flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cap-accent to-purple-600 flex items-center justify-center">
+                    <i class="fas fa-chart-line text-white"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold">ფინანსური მდგომარეობის მაჩვენებელი</h2>
+                    <p class="text-xs text-gray-500">ავტომატურად გამოთვლილი სისტემის შეფასება</p>
+                </div>
+            </div>
+
+            <!-- Status Badge -->
+            <div id="statusBadge" class="status-card mb-6 p-5 rounded-2xl border relative overflow-hidden">
+                <div class="status-glow"></div>
+                <div class="flex items-center justify-between relative z-10">
+                    <div class="flex items-center space-x-4">
+                        <div id="statusIcon" class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl">
+                            <i class="fas fa-shield-halved"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-400 mb-1">კომპანიის მდგომარეობა</div>
+                            <div id="statusText" class="text-2xl font-bold"></div>
+                        </div>
+                    </div>
+                    <div id="statusDescription" class="hidden sm:block text-right max-w-xs">
+                        <p class="text-sm text-gray-400"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Cards Row -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                <!-- Net Working Capital -->
+                <div class="kpi-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-4 hover:border-white/10 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-9 h-9 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                            <i class="fas fa-wallet text-blue-400 text-sm"></i>
+                        </div>
+                        <span class="kpi-trend text-xs font-medium px-2 py-0.5 rounded-full" id="nwcTrend"></span>
+                    </div>
+                    <div class="text-xs text-gray-500 mb-1">წმინდა სამუშაო კაპიტალი</div>
+                    <div class="text-xl font-bold" id="nwcValue">₾ 0</div>
+                </div>
+
+                <!-- Current Period P&L -->
+                <div class="kpi-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-4 hover:border-white/10 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-9 h-9 rounded-lg bg-green-500/10 flex items-center justify-center">
+                            <i class="fas fa-chart-pie text-green-400 text-sm"></i>
+                        </div>
+                        <span class="kpi-trend text-xs font-medium px-2 py-0.5 rounded-full" id="plTrend"></span>
+                    </div>
+                    <div class="text-xs text-gray-500 mb-1">მიმდინარე მოგება / ზარალი</div>
+                    <div class="text-xl font-bold" id="plValue">₾ 0</div>
+                </div>
+
+                <!-- Liquidity Ratio -->
+                <div class="kpi-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-4 hover:border-white/10 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-9 h-9 rounded-lg bg-cyan-500/10 flex items-center justify-center">
+                            <i class="fas fa-droplet text-cyan-400 text-sm"></i>
+                        </div>
+                        <span class="kpi-trend text-xs font-medium px-2 py-0.5 rounded-full" id="liqTrend"></span>
+                    </div>
+                    <div class="text-xs text-gray-500 mb-1">ლიკვიდობის კოეფიციენტი</div>
+                    <div class="text-xl font-bold" id="liqValue">0.00</div>
+                </div>
+
+                <!-- Cash Sufficiency Days -->
+                <div class="kpi-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-4 hover:border-white/10 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-9 h-9 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                            <i class="fas fa-hourglass-half text-amber-400 text-sm"></i>
+                        </div>
+                        <span class="kpi-trend text-xs font-medium px-2 py-0.5 rounded-full" id="cashDaysTrend"></span>
+                    </div>
+                    <div class="text-xs text-gray-500 mb-1">ნაღდი ფულის საკმარისობა</div>
+                    <div class="text-xl font-bold"><span id="cashDaysValue">0</span> დღე</div>
+                </div>
+
+                <!-- Break-even Status -->
+                <div class="kpi-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-4 hover:border-white/10 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-9 h-9 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                            <i class="fas fa-bullseye text-purple-400 text-sm"></i>
+                        </div>
+                        <span class="kpi-trend text-xs font-medium px-2 py-0.5 rounded-full" id="beTrend"></span>
+                    </div>
+                    <div class="text-xs text-gray-500 mb-1">ნულზე გასვლის მდგომარეობა</div>
+                    <div class="text-xl font-bold" id="beValue">₾ 0</div>
+                </div>
+
+                <!-- 30-day Obligation Coverage -->
+                <div class="kpi-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-4 hover:border-white/10 transition-all">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="w-9 h-9 rounded-lg bg-rose-500/10 flex items-center justify-center">
+                            <i class="fas fa-calendar-check text-rose-400 text-sm"></i>
+                        </div>
+                        <span class="kpi-trend text-xs font-medium px-2 py-0.5 rounded-full" id="obCovTrend"></span>
+                    </div>
+                    <div class="text-xs text-gray-500 mb-1">30 დღის ვალდებულებების დაფარვა</div>
+                    <div class="text-xl font-bold" id="obCovValue">0%</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 2. BALANCE PICTURE -->
+        <!-- ============================================================ -->
+        <section id="balance" class="mb-10">
+            <div class="section-header flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                    <i class="fas fa-scale-balanced text-white"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold">ბალანსის სურათი</h2>
+                    <p class="text-xs text-gray-500">სტრუქტურული სურათი — აქტივები და მიმდინარე ვალდებულებები</p>
+                </div>
+            </div>
+
+            <!-- ===== A. ASSETS ===== -->
+            <div class="mb-8">
+                <div class="flex items-center space-x-2 mb-5">
+                    <span class="w-3 h-3 rounded-full bg-blue-500"></span>
+                    <h3 class="text-lg font-bold text-blue-400">A. აქტივები</h3>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                    <!-- A1. Inventory -->
+                    <div class="data-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center space-x-3 mb-5">
+                            <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                                <i class="fas fa-boxes-stacked text-blue-400 text-sm"></i>
+                            </div>
+                            <h4 class="font-semibold">A1. სასაწყობე ნაშთები</h4>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">ნაშთი თვითღირებულებით</span>
+                                <span class="text-sm font-semibold" id="invCost">₾ 125,400</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">ნაშთი გასაყიდი ღირებულებით</span>
+                                <span class="text-sm font-semibold" id="invSale">₾ 187,200</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">მოსალოდნელი მოგების პოტენციალი</span>
+                                <span class="text-sm font-semibold text-cap-green" id="invProfit">₾ 61,800</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">მარაგის ბრუნვის მაჩვენებელი</span>
+                                <span class="text-sm font-semibold" id="invTurnover">4.2x</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2">
+                                <span class="text-sm text-gray-400">ნელა მოძრავი / გაჩერებული საქონელი</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-semibold text-amber-400" id="invSlow">₾ 12,300</span>
+                                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- A2. Cash & Liquid -->
+                    <div class="data-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center space-x-3 mb-5">
+                            <div class="w-8 h-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+                                <i class="fas fa-money-bills text-green-400 text-sm"></i>
+                            </div>
+                            <h4 class="font-semibold">A2. ნაღდი და ლიკვიდური თანხები</h4>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">ფული ბანკში</span>
+                                <span class="text-sm font-semibold" id="cashBank">₾ 45,200</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">ფული სალაროში</span>
+                                <span class="text-sm font-semibold" id="cashRegister">₾ 3,800</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">გზაში არსებული თანხა</span>
+                                <span class="text-sm font-semibold text-gray-300" id="cashTransit">₾ 8,500</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2 mt-2 bg-white/5 rounded-xl px-4">
+                                <span class="text-sm font-medium text-cap-accent-light">ხელმისაწვდომი ნაღდი თანხა</span>
+                                <span class="text-lg font-bold text-cap-green" id="cashAvailable">₾ 32,700</span>
+                            </div>
+                            <div class="text-xs text-gray-500 text-right">ნაღდი თანხა – უახლოესი 30 დღის გადასახდელები</div>
+                        </div>
+                    </div>
+
+                    <!-- A3. Supplier Prepayments -->
+                    <div class="data-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center space-x-3 mb-5">
+                            <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
+                                <i class="fas fa-truck-field text-indigo-400 text-sm"></i>
+                            </div>
+                            <h4 class="font-semibold">A3. მომწოდებლებზე გაცემული თანხები</h4>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">წინასწარ გადახდილი თანხა</span>
+                                <span class="text-sm font-semibold" id="prepaid">₾ 18,600</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2">
+                                <span class="text-sm text-gray-400">მიღების მოლოდინის მაჩვენებელი</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-semibold" id="prepaidExpected">7 დღე</span>
+                                    <div class="w-16 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                        <div class="h-full bg-indigo-400 rounded-full" style="width: 60%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- A4. Receivables -->
+                    <div class="data-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center space-x-3 mb-5">
+                            <div class="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                                <i class="fas fa-file-invoice-dollar text-orange-400 text-sm"></i>
+                            </div>
+                            <h4 class="font-semibold">A4. ამოსაღები ვალები</h4>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">ჯამური თანხა</span>
+                                <span class="text-sm font-bold" id="recTotal">₾ 67,300</span>
+                            </div>
+                            <!-- Aging Breakdown -->
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="bg-white/5 rounded-xl p-3 text-center">
+                                    <div class="text-xs text-gray-500 mb-1">0–30 დღე</div>
+                                    <div class="text-sm font-semibold text-cap-green" id="rec030">₾ 34,500</div>
+                                </div>
+                                <div class="bg-white/5 rounded-xl p-3 text-center">
+                                    <div class="text-xs text-gray-500 mb-1">30–60 დღე</div>
+                                    <div class="text-sm font-semibold text-amber-400" id="rec3060">₾ 22,100</div>
+                                </div>
+                                <div class="bg-white/5 rounded-xl p-3 text-center">
+                                    <div class="text-xs text-gray-500 mb-1">60+ დღე</div>
+                                    <div class="text-sm font-semibold text-red-400" id="rec60plus">₾ 10,700</div>
+                                </div>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2">
+                                <span class="text-sm text-gray-400">საეჭვო ვალის პროცენტი</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-semibold text-red-400" id="recDoubtful">8.2%</span>
+                                    <div class="w-16 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                        <div class="h-full bg-red-400 rounded-full" style="width: 8.2%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== B. CURRENT LIABILITIES ===== -->
+            <div>
+                <div class="flex items-center space-x-2 mb-5">
+                    <span class="w-3 h-3 rounded-full bg-red-500"></span>
+                    <h3 class="text-lg font-bold text-red-400">B. მიმდინარე ვალდებულებები</h3>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                    <!-- B1. Supplier Obligations -->
+                    <div class="data-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center space-x-3 mb-5">
+                            <div class="w-8 h-8 rounded-lg bg-red-500/10 flex items-center justify-center">
+                                <i class="fas fa-handshake text-red-400 text-sm"></i>
+                            </div>
+                            <h4 class="font-semibold">B1. ვალდებულებები მომწოდებლების მიმართ</h4>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">ჯამური თანხა</span>
+                                <span class="text-sm font-bold" id="supTotal">₾ 89,400</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div class="bg-white/5 rounded-xl p-3 text-center">
+                                    <div class="text-xs text-gray-500 mb-1">7 დღეში</div>
+                                    <div class="text-sm font-semibold text-red-400" id="sup7">₾ 15,200</div>
+                                </div>
+                                <div class="bg-white/5 rounded-xl p-3 text-center">
+                                    <div class="text-xs text-gray-500 mb-1">30 დღეში</div>
+                                    <div class="text-sm font-semibold text-amber-400" id="sup30">₾ 38,600</div>
+                                </div>
+                                <div class="bg-white/5 rounded-xl p-3 text-center">
+                                    <div class="text-xs text-gray-500 mb-1">ვადაგადაცილ.</div>
+                                    <div class="text-sm font-semibold text-red-500" id="supOverdue">₾ 5,300</div>
+                                </div>
+                            </div>
+                            <!-- Timeline Bar -->
+                            <div>
+                                <div class="text-xs text-gray-500 mb-2">ვადობრივი განაწილება</div>
+                                <div class="flex h-3 rounded-full overflow-hidden bg-white/5">
+                                    <div class="bg-red-500 h-full transition-all" style="width: 17%" title="7 დღეში"></div>
+                                    <div class="bg-amber-500 h-full transition-all" style="width: 43%" title="30 დღეში"></div>
+                                    <div class="bg-blue-500 h-full transition-all" style="width: 34%" title="30+ დღე"></div>
+                                    <div class="bg-red-700 h-full transition-all" style="width: 6%" title="ვადაგადაცილებული"></div>
+                                </div>
+                                <div class="flex justify-between text-xs text-gray-600 mt-1">
+                                    <span>7 დღე</span>
+                                    <span>30 დღე</span>
+                                    <span>30+</span>
+                                    <span>ვადაგად.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- B2. Loan Obligations -->
+                    <div class="data-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center space-x-3 mb-5">
+                            <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
+                                <i class="fas fa-building-columns text-purple-400 text-sm"></i>
+                            </div>
+                            <h4 class="font-semibold">B2. სასესხო ვალდებულებები</h4>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">დარჩენილი ძირითადი თანხა</span>
+                                <span class="text-sm font-semibold" id="loanPrincipal">₾ 120,000</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">მომდევნო გადასახდელი</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-semibold text-amber-400" id="loanNext">₾ 4,500</span>
+                                    <span class="text-xs text-gray-500">12 მარტი</span>
+                                </div>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">ყოველთვიური გადასახდელი</span>
+                                <span class="text-sm font-semibold" id="loanMonthly">₾ 4,500</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">პროცენტის მაჩვენებელი</span>
+                                <span class="text-sm font-semibold text-cap-accent-light" id="loanRate">14.5%</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2">
+                                <span class="text-sm text-gray-400">ვალის წილი ბრუნვასთან</span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-semibold" id="loanToRev">28%</span>
+                                    <div class="w-20 h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                        <div class="h-full bg-purple-400 rounded-full" style="width: 28%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- B3. Tax Obligations -->
+                    <div class="data-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center space-x-3 mb-5">
+                            <div class="w-8 h-8 rounded-lg bg-yellow-500/10 flex items-center justify-center">
+                                <i class="fas fa-landmark text-yellow-400 text-sm"></i>
+                            </div>
+                            <h4 class="font-semibold">B3. საგადასახადო ვალდებულებები</h4>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">დამატებული ღირებულების გადასახადი</span>
+                                <span class="text-sm font-semibold" id="taxVat">₾ 8,200</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">საშემოსავლო გადასახადი</span>
+                                <span class="text-sm font-semibold" id="taxIncome">₾ 3,400</span>
+                            </div>
+                            <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                                <span class="text-sm text-gray-400">სხვა გადასახადები</span>
+                                <span class="text-sm font-semibold" id="taxOther">₾ 1,200</span>
+                            </div>
+                            <div class="flex items-center justify-between py-2 px-4 bg-yellow-500/5 border border-yellow-500/10 rounded-xl">
+                                <span class="text-sm text-yellow-400">
+                                    <i class="fas fa-clock mr-2"></i>გადახდის ბოლო ვადა
+                                </span>
+                                <span class="text-sm font-bold text-yellow-400" id="taxDeadline">15 მარტი, 2026</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- B4. Operational Obligations -->
+                    <div class="data-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-6">
+                        <div class="flex items-center space-x-3 mb-5">
+                            <div class="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center">
+                                <i class="fas fa-gears text-teal-400 text-sm"></i>
+                            </div>
+                            <h4 class="font-semibold">B4. საოპერაციო ვალდებულებები</h4>
+                        </div>
+
+                        <!-- Fixed Expenses -->
+                        <div class="mb-5">
+                            <div class="flex items-center space-x-2 mb-3">
+                                <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+                                <span class="text-sm font-medium text-teal-400">ფიქსირებული ხარჯები</span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm py-1.5 border-b border-white/5">
+                                    <span class="text-gray-400">ქირა</span>
+                                    <span class="font-medium" id="fixRent">₾ 4,500</span>
+                                </div>
+                                <div class="flex justify-between text-sm py-1.5 border-b border-white/5">
+                                    <span class="text-gray-400">ხელფასები</span>
+                                    <span class="font-medium" id="fixSalary">₾ 18,200</span>
+                                </div>
+                                <div class="flex justify-between text-sm py-1.5 border-b border-white/5">
+                                    <span class="text-gray-400">კომუნალური</span>
+                                    <span class="font-medium" id="fixUtility">₾ 1,800</span>
+                                </div>
+                                <div class="flex justify-between text-sm py-1.5 border-b border-white/5">
+                                    <span class="text-gray-400">პროგრამული მომსახურება</span>
+                                    <span class="font-medium" id="fixSoftware">₾ 2,400</span>
+                                </div>
+                                <div class="flex justify-between text-sm py-1.5 border-b border-white/5">
+                                    <span class="text-gray-400">სხვა ფიქსირებული</span>
+                                    <span class="font-medium" id="fixOther">₾ 1,600</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center mt-3 px-4 py-2.5 bg-teal-500/10 rounded-xl">
+                                <span class="text-sm font-medium text-teal-400">ჯამური ფიქსირებული თვიური ხარჯი</span>
+                                <span class="text-lg font-bold text-teal-400" id="fixTotal">₾ 28,500</span>
+                            </div>
+                        </div>
+
+                        <!-- Variable Expenses -->
+                        <div>
+                            <div class="flex items-center space-x-2 mb-3">
+                                <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+                                <span class="text-sm font-medium text-sky-400">ცვლადი ხარჯები</span>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex justify-between text-sm py-1.5 border-b border-white/5">
+                                    <span class="text-gray-400">რეკლამა</span>
+                                    <span class="font-medium" id="varAds">₾ 5,200</span>
+                                </div>
+                                <div class="flex justify-between text-sm py-1.5 border-b border-white/5">
+                                    <span class="text-gray-400">ბონუსები</span>
+                                    <span class="font-medium" id="varBonus">₾ 3,100</span>
+                                </div>
+                                <div class="flex justify-between text-sm py-1.5 border-b border-white/5">
+                                    <span class="text-gray-400">საკომისიო</span>
+                                    <span class="font-medium" id="varCommission">₾ 2,800</span>
+                                </div>
+                                <div class="flex justify-between text-sm py-1.5">
+                                    <span class="text-gray-400">სხვა ცვლადი</span>
+                                    <span class="font-medium" id="varOther">₾ 1,400</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 3. CASH & OBLIGATION PRESSURE BLOCK -->
+        <!-- ============================================================ -->
+        <section id="cash-pressure" class="mb-10">
+            <div class="section-header flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center">
+                    <i class="fas fa-hand-holding-dollar text-white"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold">ნაღდი ფულის და ვალდებულებების წნეხი</h2>
+                    <p class="text-xs text-gray-500">გადარჩენის კონტროლი</p>
+                </div>
+            </div>
+
+            <!-- Pressure Status -->
+            <div id="pressureCard" class="pressure-card mb-6 p-5 rounded-2xl border relative overflow-hidden">
+                <div class="pressure-glow"></div>
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
+                    <div class="flex items-center space-x-4">
+                        <div id="pressureIcon" class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl">
+                            <i class="fas fa-gauge-high"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm text-gray-400 mb-1">რესურსის საკმარისობა</div>
+                            <div id="pressureText" class="text-xl font-bold"></div>
+                        </div>
+                    </div>
+                    <div id="pressureAmount" class="text-right">
+                        <div class="text-sm text-gray-400">ნაშთი / დეფიციტი</div>
+                        <div class="text-2xl font-bold" id="pressureDelta">₾ 0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <!-- Total Current Obligations -->
+                <div class="bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all">
+                    <div class="text-xs text-gray-500 mb-2">მიმდინარე ვალდებულებების ჯამი</div>
+                    <div class="text-xl font-bold" id="prTotalObl">₾ 152,800</div>
+                    <div class="mt-3 h-1 bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-red-500 rounded-full" style="width: 75%"></div>
+                    </div>
+                </div>
+
+                <!-- 30-day Payable -->
+                <div class="bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all">
+                    <div class="text-xs text-gray-500 mb-2">30 დღეში გადასახდელი თანხა</div>
+                    <div class="text-xl font-bold text-amber-400" id="pr30Day">₾ 53,800</div>
+                    <div class="mt-3 h-1 bg-white/5 rounded-full overflow-hidden">
+                        <div class="h-full bg-amber-500 rounded-full" style="width: 45%"></div>
+                    </div>
+                </div>
+
+                <!-- Coverage Ratio -->
+                <div class="bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all">
+                    <div class="text-xs text-gray-500 mb-2">დაფარვის კოეფიციენტი</div>
+                    <div class="text-xl font-bold text-cap-accent-light" id="prCovRatio">1.07</div>
+                    <div class="text-xs text-gray-500 mt-1">ნაღდი / 30-დღიანი ვალდებ.</div>
+                </div>
+
+                <!-- Fixed Expense Coverage -->
+                <div class="bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all">
+                    <div class="text-xs text-gray-500 mb-2">ფიქსირებული ხარჯების დაფარვა</div>
+                    <div class="text-xl font-bold text-cap-green" id="prFixCov">2.02x</div>
+                    <div class="text-xs text-gray-500 mt-1">ხელმისაწვდომი / ფიქს. ხარჯი</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <!-- Break-even Revenue -->
+                <div class="bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i class="fas fa-bullseye text-purple-400 text-sm"></i>
+                        <span class="text-xs text-gray-500">ნულზე გასასვლელი ბრუნვა</span>
+                    </div>
+                    <div class="text-xl font-bold" id="prBreakEven">₾ 95,000</div>
+                </div>
+
+                <!-- Cash Sufficiency Days -->
+                <div class="bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i class="fas fa-hourglass-half text-amber-400 text-sm"></i>
+                        <span class="text-xs text-gray-500">ნაღდი ფულის საკმარისობა</span>
+                    </div>
+                    <div class="text-xl font-bold"><span id="prCashDays">42</span> <span class="text-sm text-gray-400">დღე</span></div>
+                </div>
+
+                <!-- Inventory to Obligations Ratio -->
+                <div class="bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-white/10 transition-all">
+                    <div class="flex items-center space-x-2 mb-2">
+                        <i class="fas fa-scale-balanced text-cyan-400 text-sm"></i>
+                        <span class="text-xs text-gray-500">მარაგი / ვალდებულებები</span>
+                    </div>
+                    <div class="text-xl font-bold" id="prInvToObl">1.22x</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 4. SALES & PERFORMANCE BLOCK -->
+        <!-- ============================================================ -->
+        <section id="sales" class="mb-10">
+            <div class="section-header flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
+                    <i class="fas fa-cart-shopping text-white"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold">გაყიდვების და შესრულების ბლოკი</h2>
+                    <p class="text-xs text-gray-500">შემოსავლები, მოგებიანობა და შესრულების მაჩვენებლები</p>
+                </div>
+            </div>
+
+            <!-- Revenue Cards -->
+            <div class="mb-6">
+                <div class="flex items-center space-x-2 mb-4">
+                    <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                    <h3 class="text-base font-semibold text-green-400">შემოსავალი</h3>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="revenue-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-green-500/20 transition-all">
+                        <div class="text-xs text-gray-500 mb-1">დღიური</div>
+                        <div class="text-2xl font-bold text-cap-green" id="revDaily">₾ 4,250</div>
+                        <div class="flex items-center space-x-1 mt-2">
+                            <i class="fas fa-arrow-up text-xs text-cap-green"></i>
+                            <span class="text-xs text-cap-green">+8.3%</span>
+                        </div>
+                    </div>
+                    <div class="revenue-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-green-500/20 transition-all">
+                        <div class="text-xs text-gray-500 mb-1">კვირეული</div>
+                        <div class="text-2xl font-bold text-cap-green" id="revWeekly">₾ 28,700</div>
+                        <div class="flex items-center space-x-1 mt-2">
+                            <i class="fas fa-arrow-up text-xs text-cap-green"></i>
+                            <span class="text-xs text-cap-green">+5.1%</span>
+                        </div>
+                    </div>
+                    <div class="revenue-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-green-500/20 transition-all">
+                        <div class="text-xs text-gray-500 mb-1">თვიური</div>
+                        <div class="text-2xl font-bold text-cap-green" id="revMonthly">₾ 118,500</div>
+                        <div class="flex items-center space-x-1 mt-2">
+                            <i class="fas fa-arrow-up text-xs text-cap-green"></i>
+                            <span class="text-xs text-cap-green">+12.5%</span>
+                        </div>
+                    </div>
+                    <div class="revenue-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-green-500/20 transition-all">
+                        <div class="text-xs text-gray-500 mb-1">წლიური</div>
+                        <div class="text-2xl font-bold text-cap-green" id="revYearly">₾ 1,245,000</div>
+                        <div class="flex items-center space-x-1 mt-2">
+                            <i class="fas fa-arrow-up text-xs text-cap-green"></i>
+                            <span class="text-xs text-cap-green">+18.2%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profitability & Performance -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Profitability -->
+                <div class="data-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-6">
+                    <div class="flex items-center space-x-3 mb-5">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                            <i class="fas fa-chart-pie text-emerald-400 text-sm"></i>
+                        </div>
+                        <h4 class="font-semibold">მოგებიანობა</h4>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                            <span class="text-sm text-gray-400">მთლიანი მოგება</span>
+                            <span class="text-sm font-bold text-cap-green" id="profGross">₾ 35,550</span>
+                        </div>
+                        <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                            <span class="text-sm text-gray-400">მოგების პროცენტი</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-bold text-cap-green" id="profMargin">30%</span>
+                                <div class="w-20 h-2 bg-white/10 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full" style="width: 30%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                            <span class="text-sm text-gray-400">შემოსავალი vs ნულზე გასასვლელი</span>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-semibold text-cap-green" id="profVsBe">+₾ 23,500</span>
+                                <i class="fas fa-check-circle text-cap-green text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="data-row flex items-center justify-between py-2">
+                            <span class="text-sm text-gray-400">წინა პერიოდთან შედარებით</span>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-arrow-trend-up text-cap-green"></i>
+                                <span class="text-sm font-semibold text-cap-green" id="profChange">+12.5%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Performance Indicators -->
+                <div class="data-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-6">
+                    <div class="flex items-center space-x-3 mb-5">
+                        <div class="w-8 h-8 rounded-lg bg-sky-500/10 flex items-center justify-center">
+                            <i class="fas fa-ranking-star text-sky-400 text-sm"></i>
+                        </div>
+                        <h4 class="font-semibold">შესრულების დამატებითი მაჩვენებლები</h4>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                            <span class="text-sm text-gray-400">გაყიდვების ზრდის პროცენტი</span>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-arrow-trend-up text-cap-green text-xs"></i>
+                                <span class="text-sm font-bold text-cap-green" id="perfGrowth">+15.3%</span>
+                            </div>
+                        </div>
+                        <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                            <span class="text-sm text-gray-400">მოგების მარჟის ცვლილება</span>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-arrow-trend-up text-cap-green text-xs"></i>
+                                <span class="text-sm font-semibold text-cap-green" id="perfMarginChg">+2.1%</span>
+                            </div>
+                        </div>
+                        <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                            <span class="text-sm text-gray-400">საშუალო დღიური შემოსავალი</span>
+                            <span class="text-sm font-semibold" id="perfAvgDaily">₾ 3,950</span>
+                        </div>
+                        <div class="data-row flex items-center justify-between py-2 border-b border-white/5">
+                            <span class="text-sm text-gray-400">ერთ თანამშრომელზე გაყიდვები</span>
+                            <span class="text-sm font-semibold" id="perfPerEmp">₾ 7,406</span>
+                        </div>
+                        <div class="data-row flex items-center justify-between py-2">
+                            <span class="text-sm text-gray-400">ფართობის ერთეულზე გაყიდვები</span>
+                            <span class="text-sm font-semibold" id="perfPerSqm">₾ 592 / მ²</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- 5. AUTOMATICALLY CALCULATED KEY INDICATORS -->
+        <!-- ============================================================ -->
+        <section id="kpi" class="mb-10">
+            <div class="section-header flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-500 flex items-center justify-center">
+                    <i class="fas fa-calculator text-white"></i>
+                </div>
+                <div>
+                    <h2 class="text-xl font-bold">ავტომატურად გამოთვლილი ძირითადი მაჩვენებლები</h2>
+                    <p class="text-xs text-gray-500">ფორმულებზე დაფუძნებული სისტემის გამოთვლები</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+
+                <!-- KPI 1 -->
+                <div class="kpi-formula-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-cap-accent/20 transition-all group">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-lg font-bold text-blue-400 group-hover:bg-blue-500/20 transition-colors">1</div>
+                        <div>
+                            <h4 class="text-sm font-semibold">წმინდა სამუშაო კაპიტალი</h4>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 rounded-xl px-4 py-3 mb-3">
+                        <code class="text-xs text-cap-accent-light">აქტივები − მიმდინარე ვალდებულებები</code>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500">შედეგი:</span>
+                        <span class="text-lg font-bold text-cap-green" id="kpi1Result">₾ 58,700</span>
+                    </div>
+                </div>
+
+                <!-- KPI 2 -->
+                <div class="kpi-formula-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-cap-accent/20 transition-all group">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-lg font-bold text-cyan-400 group-hover:bg-cyan-500/20 transition-colors">2</div>
+                        <div>
+                            <h4 class="text-sm font-semibold">ლიკვიდობის კოეფიციენტი</h4>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 rounded-xl px-4 py-3 mb-3">
+                        <code class="text-xs text-cap-accent-light">ხელმისაწვდომი ნაღდი / 30 დღეში გადასახდელი</code>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500">შედეგი:</span>
+                        <span class="text-lg font-bold text-cap-accent-light" id="kpi2Result">1.07</span>
+                    </div>
+                </div>
+
+                <!-- KPI 3 -->
+                <div class="kpi-formula-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-cap-accent/20 transition-all group">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-lg font-bold text-purple-400 group-hover:bg-purple-500/20 transition-colors">3</div>
+                        <div>
+                            <h4 class="text-sm font-semibold">ნულზე გასასვლელი ბრუნვა</h4>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 rounded-xl px-4 py-3 mb-3">
+                        <code class="text-xs text-cap-accent-light">ფიქსირებული თვიური ხარჯი / მოგების %</code>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500">შედეგი:</span>
+                        <span class="text-lg font-bold text-purple-400" id="kpi3Result">₾ 95,000</span>
+                    </div>
+                </div>
+
+                <!-- KPI 4 -->
+                <div class="kpi-formula-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-cap-accent/20 transition-all group">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-lg font-bold text-amber-400 group-hover:bg-amber-500/20 transition-colors">4</div>
+                        <div>
+                            <h4 class="text-sm font-semibold">ნაღდი ფულის საკმარისობა</h4>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 rounded-xl px-4 py-3 mb-3">
+                        <code class="text-xs text-cap-accent-light">ხელმისაწვდომი თანხა / საშ. დღიური ფიქს. ხარჯი</code>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500">შედეგი:</span>
+                        <span class="text-lg font-bold text-amber-400" id="kpi4Result">42 დღე</span>
+                    </div>
+                </div>
+
+                <!-- KPI 5 -->
+                <div class="kpi-formula-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-cap-accent/20 transition-all group">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-lg font-bold text-red-400 group-hover:bg-red-500/20 transition-colors">5</div>
+                        <div>
+                            <h4 class="text-sm font-semibold">ვალდებულებების წნევის მაჩვენებელი</h4>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 rounded-xl px-4 py-3 mb-3">
+                        <code class="text-xs text-cap-accent-light">მიმდინარე ვალდებულებები / თვიური შემოსავალი</code>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500">შედეგი:</span>
+                        <span class="text-lg font-bold text-red-400" id="kpi5Result">1.29</span>
+                    </div>
+                </div>
+
+                <!-- KPI 6 -->
+                <div class="kpi-formula-card bg-cap-secondary/60 border border-white/5 rounded-2xl p-5 hover:border-cap-accent/20 transition-all group">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-lg font-bold text-green-400 group-hover:bg-green-500/20 transition-colors">6</div>
+                        <div>
+                            <h4 class="text-sm font-semibold">მარაგის ბრუნვა</h4>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 rounded-xl px-4 py-3 mb-3">
+                        <code class="text-xs text-cap-accent-light">გაყიდული საქონლის თვითღირებულება / საშ. მარაგი</code>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500">შედეგი:</span>
+                        <span class="text-lg font-bold text-green-400" id="kpi6Result">4.2x</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="manager.js"></script>
+</body>
+</html>
